@@ -51,7 +51,7 @@ if debugging:
 
 infile = r"..\data\OollooJinduckin" # IESX seismic horizon file
 
-df_interp = pd.read_fwf(infile, header=None, usecols = [0,1,4,9], skiprows = [0,1],
+df_interp = pd.read_csv(infile, header=None, usecols = [0,1,4,9], skiprows = [0,1], delim_whitespace=True,
                     skipfooter=1,  names = ["X", "Y", "PETREL_ELEVATION", "SURVEY_LINE"])
 
 df_interp['ELEVATION'] = -1*df_interp['PETREL_ELEVATION']
@@ -78,7 +78,6 @@ for line in df_interp.SURVEY_LINE.unique():
 template_file = r"..\data\OollooJinduckin_EGGS_template.csv"
 
 df_template = pd.read_csv(template_file)
-
 
 # sample a DEM
 

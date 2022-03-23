@@ -55,7 +55,7 @@ if grid:
 df_interp = pd.read_csv("../data/OollooJinduckin_interp_EGGS_compressed.csv")
 
 # Uncertainty modelling using additive and multiplicative noise
-additive_noise = 5.
+additive_noise = 10.
 mulitplicative_noise = 0.2
 
 df_interp['UNCERTAINTY'] = df_interp['DEPTH'] * mulitplicative_noise + additive_noise
@@ -145,3 +145,7 @@ for line_number in lines:
         ax.set_title(ax_vars[i])
 
     plt.savefig("{}_model_section_compare.png".format(line_number), dpi=300.)
+
+# If happy with the uncertainty model, export
+
+df_interp.to_csv("../data/OollooJinduckin_interp_EGGS_compressed_final.csv", index = False)
