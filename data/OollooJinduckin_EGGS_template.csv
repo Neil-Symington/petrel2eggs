@@ -1,0 +1,2 @@
+SURVEY_NAME,UTM_ZONE,DATUM,EPSG,SURVEY_ECAT_NUMBER,AGE_TYPE,BOUNDARY_NAME,OvrStrtUnt,OvrStrtCod,UndStrtUnt,UndStrtCod,INTERPRETATION_BASIS_1,DEPTH_UOM,DEPTH_CONFIDENCE,Comment,Operator
+Daly River Region AEM SkyTEM,52,GDA 94,EPSG:28352,122012,INTRA_Paleozoic,Oolloo- Jinduckin,Oolloo Dolostone,24443,Jinduckin Formation,24641,Interpretation of AEM,m,M,Exported from Petrel project,Neil Symington
