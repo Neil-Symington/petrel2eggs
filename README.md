@@ -1,2 +1,3 @@
 # AEM_interp_uncert
-A repository with a series of scripts and data demonstrating how to estimate geological uncertainty to AEM interpretation points.
+A repository with a workflow for estimating the uncertainty of AEM interpretations. The workflow takes interpetation horizons from Petrel and estiamtes that uncertainty associated with each point. This workflow is designed to capture interpretation uncertainty on point data before they are added into Geosciecnce Australia's Estimates of Geological and Geophysical Surfaces (EGGs) database. At the time of publishing this workflow the schema for this database is not yet finalised and the fields that are populated by this workflow are liable to change in the future to make the outputs EGGs compliant.
+
