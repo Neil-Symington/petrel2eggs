@@ -51,8 +51,8 @@ if debugging:
 
 infile = r"..\data\OollooJinduckin" # IESX seismic horizon file
 
-df_interp = pd.read_csv(infile, header=None, usecols = [0,1,4,9], skiprows = [0,1], delim_whitespace=True,
-                    skipfooter=1,  names = ["X", "Y", "PETREL_ELEVATION", "SURVEY_LINE"])
+df_interp = pd.read_csv(infile, header=None, usecols = [0,1,2,4,9], skiprows = [0,1], delim_whitespace=True,
+                    skipfooter=1,  names = ["X", "Y", "SEGMENT_ID", "PETREL_ELEVATION", "SURVEY_LINE"])
 
 df_interp['ELEVATION'] = -1*df_interp['PETREL_ELEVATION']
 
@@ -108,32 +108,35 @@ for col in df_template.columns:
 
 df_interp.to_csv(r"../data/OollooJinduckin_interp_EGGS.csv", index=False)
 
+df_interp['VERTEX_NO'] = 0
 df_interp['rtp_mask'] = 0
-
-dist_threshold = 50.
 epsilon = 1. # for the rtp algorithm
 
 # now we want to do some compression using the
 for line in df_interp.SURVEY_LINE.unique():
     df_line = df_interp[df_interp['SURVEY_LINE'] == line]
+    df_line = df_line.sort_values('TRACE')
     df_line['distance'] = coords2distance(np.column_stack((df_line.X, df_line.Y)))
     delta_d = np.diff(df_line['distance'])
-    # split into polylines
-    split_points = np.where(delta_d>dist_threshold)[0]
-    counter = 0
-    df_line['segment'] = 0
-    for i, (index, row) in enumerate(df_line.iterrows()):
-        df_line.at[index, 'segment'] = counter
-        if np.any(np.isin(split_points, i)):
-            counter+=1
     # now implement the rtp
-    for segment in df_line['segment'].unique():
-        df_segment = df_line[df_line['segment'] == segment]
+    for segment in df_line['SEGMENT_ID'].unique():
+        df_segment = df_line[df_line['SEGMENT_ID'] == segment]
         rtp_mask = rdp(df_segment[['distance', 'ELEVATION']].values,
                                                          epsilon = epsilon, algo="iter", return_mask=True)
         df_interp.at[df_segment.index, 'rtp_mask'] = rtp_mask
 
-
 df_interp_compressed = df_interp[df_interp['rtp_mask'].values].drop(columns = ['PETREL_ELEVATION', 'rtp_mask'])
+
+# add the vertex number to the compressed data
+
+for line in df_interp_compressed.SURVEY_LINE.unique():
+    df_line = df_interp_compressed[df_interp_compressed['SURVEY_LINE'] == line]
+    # sort on trace
+    df_line = df_line.sort_values('TRACE')
+    # iterate through each segment
+    for segment in df_line['SEGMENT_ID'].unique():
+        df_segment = df_line[df_line['SEGMENT_ID'] == segment]
+        df_interp_compressed.at[df_segment.index, 'VERTEX_NO'] = np.arange(1, len(df_segment) + 1)
+
 
 df_interp_compressed.to_csv(r"../data/OollooJinduckin_interp_EGGS_compressed.csv", index=False)
