@@ -40,7 +40,7 @@ uncompressedOutfile = r"../data/OollooJinduckin_interp_EGGS.csv"
 
 use = "layer_thickness"
 additive_noise = 10.
-mulitplicative_noise = 3
+mulitplicative_noise = 3.
 uncertDescr = "95% confidence"
 
 thickness = np.array([5., 5.4, 5.8, 6.3, 6.7, 7.3, 7.8, 8.4, 9.1, 9.8, 10.6, 11.4, 12.3, 13.2, 14.3 ,15.4, 16.6,  17.9,
@@ -70,7 +70,7 @@ for line in df_interp.SURVEY_LINE.unique():
         groupY = f.attributes(segyio.TraceField.GroupY)[:]
         trace = f.attributes(segyio.TraceField.TRACE_SEQUENCE_LINE)[:]
         groundElevation = f.attributes(segyio.TraceField.ElevationScalar)[:]
-        # use a nearest neighbour search to find the ground elevation and trace at each interpretation point
+        # use a nearest neighbour search  to find the ground elevation and trace at each interpretation point
         tree = KDTree(np.column_stack((groupX, groupY)))
         dist, ind = tree.query(df_line[['X', 'Y']])
         df_interp.at[df_line.index, "DEM"] = groundElevation[ind]
@@ -99,6 +99,7 @@ if compare_dem:
     # plot to check correctness
     plt.scatter(DEM, df_interp['DEM'])
     plt.show()
+
 #calculate the depth below ground level for each interpretation
 df_interp['DEPTH'] = df_interp['DEM'] - df_interp["ELEVATION"]
 
